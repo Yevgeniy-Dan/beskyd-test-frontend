@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Table, Button } from "reactstrap";
+import { Table } from "reactstrap";
 import RecordForm, { Record } from "./RecordForm";
-import { data } from "../../data/test";
+import { toast } from "react-toastify";
+
 import styles from "./Grid.module.css";
 import Filter from "./Filter";
 import { RecordContext } from "../../contexts/RecordContext";
@@ -19,18 +20,33 @@ const Grid: React.FC<{}> = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleRecordForm = async (record: Record) => {
-    setOpen(false);
-    setEditRecord(null);
-    if (record._id.length === 0) {
-      await addRecord(record);
-    } else {
-      await updateRecord(record);
+    let message: string = "";
+    try {
+      if (record._id.length === 0) {
+        await addRecord(record);
+        message = "The record was successfully added";
+      } else {
+        await updateRecord(record);
+        message = "The record was successfully edited";
+      }
+      setOpen(false);
+      setEditRecord(null);
+    } catch (error: any) {
+      const errorMessage =
+        (error.response &&
+          error.response?.data &&
+          error.response?.data?.message) ||
+        error.message ||
+        error.toString();
+      toast.error(errorMessage);
     }
+
+    if (message.length > 0) toast.success(message);
   };
 
   const handleFilterRecords = (name: string, status: string, role: string) => {
     const filtered = filterRecords(name, status, role);
-    setFilteredRecords(filtered);
+    setFilteredRecords(filtered.slice(0, perPage));
     setCurrentPage(1);
   };
 
