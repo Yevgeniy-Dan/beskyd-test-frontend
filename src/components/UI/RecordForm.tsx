@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./RecordForm.module.css";
 
 interface RecordFormProps {
@@ -17,30 +17,49 @@ export interface Record {
   status: string;
 }
 
+const initialValues: Record = {
+  _id: "",
+  name: "",
+  address: "",
+  amount: 0,
+  role: "",
+  status: "",
+};
 const RecordForm: React.FC<RecordFormProps> = ({
   isOpen,
   onClose,
   onSave,
   record,
 }) => {
-  const [name, setName] = useState(record?.name || "");
-  const [address, setAddress] = useState(record?.address || "");
-  const [amount, setAmount] = useState(record?.amount || 0);
-  const [role, setRole] = useState(record?.role || "");
-  const [status, setStatus] = useState(record?.status || "");
-
+  const [formData, setFormData] = useState<Record>({
+    _id: record?._id || "",
+    name: record?.name || "",
+    address: record?.address || "",
+    amount: record?.amount || 0,
+    role: record?.role || "",
+    status: record?.status || "",
+  });
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newRecord: Record = {
-      _id: record?._id || "",
-      name,
-      address,
-      role,
-      status,
-      amount,
-    };
-    onSave(newRecord);
+    onSave(formData);
   };
+
+  const handleChange = (name: string, value: string | number) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    setFormData(record || initialValues);
+  }, [record]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setFormData(initialValues);
+    }
+  }, [isOpen]);
 
   return isOpen ? (
     <div className={styles.modal}>
@@ -55,8 +74,8 @@ const RecordForm: React.FC<RecordFormProps> = ({
             <input
               type="text"
               id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={formData.name}
+              onChange={(e) => handleChange("name", e.target.value)}
             />
           </div>
           <div>
@@ -64,8 +83,8 @@ const RecordForm: React.FC<RecordFormProps> = ({
             <input
               type="text"
               id="address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              value={formData.address}
+              onChange={(e) => handleChange("address", e.target.value)}
             />
           </div>
           <div>
@@ -73,16 +92,17 @@ const RecordForm: React.FC<RecordFormProps> = ({
             <input
               type="number"
               id="amount"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              value={formData.amount}
+              onChange={(e) => handleChange("amount", e.target.value)}
+              min={0}
             />
           </div>
           <div>
             <label htmlFor="role">Role:</label>
             <select
               id="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
+              value={formData.role}
+              onChange={(e) => handleChange("role", e.target.value)}
             >
               <option value="">Select a role</option>
               <option value="Customer">Customer</option>
@@ -94,8 +114,8 @@ const RecordForm: React.FC<RecordFormProps> = ({
             <label htmlFor="status">Status:</label>
             <select
               id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              value={formData.status}
+              onChange={(e) => handleChange("status", e.target.value)}
             >
               <option value="">Select a status</option>
               <option value="Open">Open</option>

@@ -26,7 +26,7 @@ const App: React.FC<React.PropsWithChildren<{}>> = (props) => {
 
   const updateRecord = async (updatedRecord: Record) => {
     const response = await api.put(
-      `/records/${updatedRecord._id}`,
+      `/api/records/${updatedRecord._id}`,
       updatedRecord
     );
     setRecords((prevRecords) =>

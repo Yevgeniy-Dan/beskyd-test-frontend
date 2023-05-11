@@ -48,6 +48,10 @@
   border-collapse: collapse;
 }
 
+.table i {
+  cursor: pointer;
+}
+
 .table th,
 .table td {
   padding: 0.5rem;

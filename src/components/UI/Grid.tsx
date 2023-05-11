@@ -14,11 +14,13 @@ const Grid: React.FC<{}> = () => {
     useContext(RecordContext);
 
   const [open, setOpen] = useState(false);
+  const [editRecord, setEditRecord] = useState<Record | null>(null);
   const [filteredRecords, setFilteredRecords] = useState<Record[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleRecordForm = async (record: Record) => {
     setOpen(false);
+    setEditRecord(null);
     if (record._id.length === 0) {
       await addRecord(record);
     } else {
@@ -47,6 +49,7 @@ const Grid: React.FC<{}> = () => {
                 <th>Name</th>
                 <th>Address</th>
                 <th>Amount</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -55,12 +58,26 @@ const Grid: React.FC<{}> = () => {
                   <td>{record.name}</td>
                   <td>{record.address}</td>
                   <td>{record.amount}</td>
+                  <th>
+                    <i
+                      className="bi bi-pencil-fill"
+                      onClick={() => {
+                        setOpen(true);
+                        setEditRecord(record);
+                      }}
+                    ></i>
+                  </th>
                 </tr>
               ))}
             </tbody>
           </Table>
           <div className={styles.controlButtons}>
-            <button className={styles.addButton} onClick={() => setOpen(true)}>
+            <button
+              className={styles.addButton}
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
               Add Record
             </button>
             <AppPaginator
@@ -89,7 +106,7 @@ const Grid: React.FC<{}> = () => {
         onSave={(record) => {
           handleRecordForm(record);
         }}
-        record={null}
+        record={editRecord}
       />
     </div>
   );
