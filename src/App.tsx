@@ -39,19 +39,19 @@ const App: React.FC<React.PropsWithChildren<{}>> = (props) => {
   const filterRecords = (name: string, status: string, role: string) => {
     let filteredRecords = records;
 
-    if (name) {
+    if (name && name.length !== 0) {
       filteredRecords = filteredRecords.filter((record) =>
         record.name.toLowerCase().includes(name.toLowerCase())
       );
     }
 
-    if (status) {
+    if (status && status.length !== 0) {
       filteredRecords = filteredRecords.filter(
         (record) => record.status === status
       );
     }
 
-    if (role) {
+    if (role && role.length !== 0) {
       filteredRecords = filteredRecords.filter(
         (record) => record.role === role
       );

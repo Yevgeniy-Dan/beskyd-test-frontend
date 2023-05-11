@@ -5,6 +5,12 @@
   margin-bottom: 20px;
 }
 
+.filterButtonsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .filterField {
   margin-bottom: 2px;
 }
@@ -32,12 +38,24 @@
 
 .filterButton {
   display: block;
+  flex-grow: 1;
   margin: 0;
+  margin-right: 0.1rem;
   padding: 0.5rem 1rem;
   border: 2px solid #3c9bd9;
   border-radius: 0.25rem;
   background-color: #3c9bd9;
   color: white;
   font-weight: bold;
+  cursor: pointer;
+}
+
+.resetButton {
+  /* width: 30px;
+  height: 30px; */
+  flex-grow: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 }

@@ -28,9 +28,20 @@ const Filter: React.FC<FilterProps> = ({ onFilter }) => {
     e.preventDefault();
     onFilter(filters);
   };
+
+  const handleFilterReset = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFilters({
+      name: "",
+      role: "",
+      status: "",
+    });
+    onFilter({ name: "", role: "", status: "" });
+  };
+
   return (
     <div className={styles.filterContainer}>
-      <form onSubmit={handleFilterSubmit}>
+      <form onSubmit={handleFilterSubmit} onReset={handleFilterReset}>
         <div className={styles.filterField}>
           <label htmlFor="name">Name</label>
           <input
@@ -69,9 +80,17 @@ const Filter: React.FC<FilterProps> = ({ onFilter }) => {
             <option value="Close">Close</option>
           </select>
         </div>
-        <button type="submit" className={styles.filterButton}>
-          Filter
-        </button>
+        <div className={styles.filterButtonsContainer}>
+          <button type="submit" className={styles.filterButton}>
+            Filter
+          </button>
+          <button
+            type="reset"
+            className={`${styles.filterButton} ${styles.resetButton}`}
+          >
+            <i className="bi bi-x-lg"></i>
+          </button>
+        </div>
       </form>
     </div>
   );
