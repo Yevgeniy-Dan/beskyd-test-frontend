@@ -9,7 +9,7 @@ interface RecordFormProps {
 }
 
 export interface Record {
-  id: string;
+  _id: string;
   name: string;
   address: string;
   amount: number;
@@ -32,7 +32,7 @@ const RecordForm: React.FC<RecordFormProps> = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newRecord: Record = {
-      id: record?.id || "",
+      _id: record?._id || "",
       name,
       address,
       role,

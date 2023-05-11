@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Table, Button } from "reactstrap";
 import RecordForm, { Record } from "./RecordForm";
 import { data } from "../../data/test";
 import styles from "./Grid.module.css";
 import Filter from "./Filter";
+import { RecordContext } from "../../contexts/RecordContext";
 
-const Grid: React.FC<React.PropsWithChildren<{}>> = (props) => {
+const Grid: React.FC<{}> = () => {
+  const { records, addRecord, updateRecord, filterRecords } =
+    useContext(RecordContext);
+
   const [open, setOpen] = useState(false);
-  const handleRecordForm = (record: Record) => {
+  const [filteredRecords, setFilteredRecords] = useState<Record[]>([]);
+
+  const handleRecordForm = async (record: Record) => {
     setOpen(false);
-    console.log(record);
+    if (record._id.length === 0) {
+      const newRecord = await addRecord(record);
+      console.log(newRecord);
+    } else {
+      const updatedRecord = await updateRecord(record);
+      console.log(updatedRecord);
+    }
   };
+
+  const handleFilterRecords = (name: string, status: string, role: string) => {
+    const filtered = filterRecords(name, status, role);
+    setFilteredRecords(filtered);
+  };
+
+  useEffect(() => {
+    setFilteredRecords(records);
+  }, [records]);
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.container}>
@@ -23,7 +45,7 @@ const Grid: React.FC<React.PropsWithChildren<{}>> = (props) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((record, index) => (
+            {filteredRecords.map((record, index) => (
               <tr key={index}>
                 <td>{record.name}</td>
                 <td>{record.address}</td>
@@ -35,7 +57,7 @@ const Grid: React.FC<React.PropsWithChildren<{}>> = (props) => {
         <div className={styles.filterContainer}>
           <Filter
             onFilter={(filters) => {
-              console.log(filters);
+              handleFilterRecords(filters.name, filters.status, filters.role);
             }}
           />
         </div>
